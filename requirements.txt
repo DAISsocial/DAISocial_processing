@@ -1,3 +1,6 @@
 aiohttp
 urllib3
 pymongo
+tweepy
+foursquare
+python-docx
