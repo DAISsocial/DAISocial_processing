@@ -4,3 +4,5 @@ pymongo
 tweepy
 foursquare
 python-docx
+nltk
+numpy
