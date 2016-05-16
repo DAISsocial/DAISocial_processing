@@ -1,5 +1,4 @@
 from config.database import db
-from analysis import start_analysis
 
 
 def save_request(user_id: int, data: dict):
@@ -14,4 +13,3 @@ def start(user_id: int, data: dict):
     # save_request(user_id, data)
     fake_data = {'center': [30, 50], 'type': 1}
     save_request(1, fake_data)
-    start_analysis(fake_data)
