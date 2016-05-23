@@ -2,10 +2,16 @@ import numpy as np
 import random
 
 
+"""
+K-means clustering to get clusters by tweet locations
+"""
+
+
 def cluster_points(X, mu):
     clusters = {}
     for x in X:
-        best_mukey = min([(i[0], np.linalg.norm(x - mu[i[0]]))
+        x_coordinates = np.array((x[1], x[2]))
+        best_mukey = min([(i[0], np.linalg.norm(x_coordinates - np.array((mu[i[0]][1], mu[i[0]][2]))))
                           for i in enumerate(mu)], key=lambda t: t[1])[0]
         try:
             clusters[best_mukey].append(x)
@@ -28,8 +34,8 @@ def has_converged(mu, oldmu):
 
 def find_centers(X, K):
     # Initialize to K random centers
-    old_mu = random.sample(X, K)
-    mu = random.sample(X, K)
+    old_mu = random.sample(list(X), K)
+    mu = random.sample(list(X), K)
     while not has_converged(mu, old_mu):
         old_mu = mu
         # Assign all points in X to clusters
@@ -37,6 +43,17 @@ def find_centers(X, K):
         # Reevaluate centers
         mu = reevaluate_centers(old_mu, clusters)
     return mu, clusters
+
+if __name__ == '__main__':
+    import random
+
+    X = np.array([(random.uniform(-1, 1), random.uniform(-1, 1), random.uniform(-1, 1)) for i in range(200)])
+
+    mu, cl = find_centers(X, 20)
+    print(mu, cl)
+
+
+
 
 
 

@@ -7,8 +7,7 @@ from collections import defaultdict
 from nltk.corpus import stopwords
 
 from analysis.sentiment.tokenize import preprocess
-
-from analysis.collecting_data.collecting_tweets import TwitterCollector
+from collecting_data.collecting_tweets import TwitterCollector
 
 
 class MediaClassifier:
@@ -35,6 +34,7 @@ class MediaClassifier:
         self.semantic_orientation = {}
 
         self.tweets = None
+        self.terms_max = None
 
     def get_terms(self, last_days=False):
 
@@ -50,7 +50,7 @@ class MediaClassifier:
             # getting tweet tokenize words without stop words
             if last_days:
                 terms_all = [term for term in preprocess(tweet.get('text'))
-                         if term not in stop and not term.startswith('@')]
+                             if term not in stop and not term.startswith('@')]
             else:
                 terms_all = [term for term in preprocess(tweet.text)
                              if term not in stop and not term.startswith('@')]
@@ -78,9 +78,9 @@ class MediaClassifier:
                 com_max.append(((t1, t2), t2_count))
 
         # Get the most frequent co-occurrences
-        terms_max = sorted(com_max, key=operator.itemgetter(1), reverse=True)
+        self.terms_max = sorted(com_max, key=operator.itemgetter(1), reverse=True)
 
-        print(terms_max[:5])
+        print(self.terms_max[:5])
 
     def compute_probabilities(self):
 
@@ -99,12 +99,18 @@ class MediaClassifier:
         # adding specific vocab from request
         self.positive_vocab = positive_vocab.extend(self.request_type.get('positive_verbs'))
 
+        # Add hashtags
+        self.positive_vocab.extend(["#".join(word) for word in self.positive_vocab])
+
         negative_vocab = [
             'bad', 'terrible', 'crap', 'useless', 'hate', ':(', ':-(',
             # 'defeat', etc.
         ]
         # adding specific vocab from request
         self.negative_vocab = negative_vocab.extend(self.request_type.get('negative_verbs'))
+
+        # Add hashtags
+        self.negative_vocab.extend(["#".join(word) for word in self.negative_vocab])
 
     def calculate_semantic_orientation(self, last_days=False):
 
