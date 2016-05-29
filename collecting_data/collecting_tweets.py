@@ -1,6 +1,6 @@
 from tweepy import Cursor
 from config.twitter import tw_api
-import datetime
+import datetime, time
 
 
 class TwitterCollector:
@@ -45,8 +45,8 @@ class TwitterCollector:
 
             converted_string = "{},{},{}km".format(self.center[0],
                                                    self.center[1], self.radius)
-
-            for tweet in Cursor(tw_api.search,
+            try:
+                for tweet in Cursor(tw_api.search,
                                 rpp=100,
                                 geocode=converted_string,
                                 show_user=False,
@@ -55,22 +55,24 @@ class TwitterCollector:
                                 # lang="en"
                                 ).items(10000):  # Count
 
-                days_delta = (datetime.datetime.now() - tweet.created_at).days
+                    days_delta = (datetime.datetime.now() - tweet.created_at).days
 
-                if days_delta < days_count:
-                    if tweet.coordinates:
+                    if days_delta < days_count:
+                        if tweet.coordinates:
 
-                        tweet_structure = {
-                            'text': tweet.text,
-                            'coordinates': tweet.coordinates,
-                            'likes': tweet.favorite_count + 1,
-                            'retweets': tweet.retweet_count + 1,
-                            'created_at': tweet.created_at
-                        }
-                        results.append(tweet_structure)
-                else:
-                    flag = False
-                    break
+                            tweet_structure = {
+                                'text': tweet.text,
+                                'coordinates': tweet.coordinates,
+                                'likes': tweet.favorite_count + 1,
+                                'retweets': tweet.retweet_count + 1,
+                                'created_at': tweet.created_at
+                            }
+                            results.append(tweet_structure)
+                    else:
+                        flag = False
+                        break
+            except BaseException as e:
+                time.sleep(60)
 
         return results, self.radius
 

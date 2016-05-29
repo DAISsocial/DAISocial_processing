@@ -42,6 +42,8 @@ class MediaClassifier:
         self.tweets, radius = collector.search_last_days() \
             if last_days else collector.search()
 
+        self.n_docs = len(self.tweets)
+
         for tweet in self.tweets:
 
             punctuation = list(string.punctuation)
@@ -99,18 +101,12 @@ class MediaClassifier:
         # adding specific vocab from request
         self.positive_vocab = positive_vocab.extend(self.request_type.get('positive_verbs'))
 
-        # Add hashtags
-        self.positive_vocab.extend(["#".join(word) for word in self.positive_vocab])
-
         negative_vocab = [
             'bad', 'terrible', 'crap', 'useless', 'hate', ':(', ':-(',
             # 'defeat', etc.
         ]
         # adding specific vocab from request
         self.negative_vocab = negative_vocab.extend(self.request_type.get('negative_verbs'))
-
-        # Add hashtags
-        self.negative_vocab.extend(["#".join(word) for word in self.negative_vocab])
 
     def calculate_semantic_orientation(self, last_days=False):
 

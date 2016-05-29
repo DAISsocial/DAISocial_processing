@@ -6,3 +6,5 @@ foursquare
 python-docx
 nltk
 numpy
+geopy
+matplotlib
