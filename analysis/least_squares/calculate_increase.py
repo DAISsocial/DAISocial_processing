@@ -11,21 +11,12 @@ def linear_func(x, a0, a1):
     return a0 + a1 * x
 
 
-def calulate_increase_1(y_data):
+def calculate_increase(y_data):
     # Initial guess.
     x0 = np.array([0.0, 0.0])
     x_data = np.arange(0, y_data.shape[0])
     a, cov_matrix = curve_fit(linear_func, x_data, y_data)
     return a
-
-
-def calulate_increase_2(y_data):
-    # Initial guess.
-    x0 = np.array([0.0, 0.0])
-    x_data = np.arange(0, y_data.shape[0])
-    a, cov_matrix = curve_fit(linear_func, x_data, y_data)
-    return a
-
 
 if __name__ == '__main__':
     x_data = np.array([0.0, 1.0, 2.0, 3.0])

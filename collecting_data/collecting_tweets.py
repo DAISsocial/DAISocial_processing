@@ -1,14 +1,18 @@
 from tweepy import Cursor
 from config.twitter import tw_api
-import datetime, time
+import datetime
+import time
+import json
+import asyncio
 
 
 class TwitterCollector:
 
-    def __init__(self, center, radius=None, count=None):
+    def __init__(self, center, radius=None, count=None, cached=False):
         self.center = center
         self.radius = radius
         self.count = count
+        self.cached = cached
 
     def search(self):
 
@@ -36,43 +40,47 @@ class TwitterCollector:
 
     def search_last_days(self, days_count=120):
 
-        if not self.radius:
-            self.radius = 2
+        if not self.cached:
+            if not self.radius:
+                self.radius = 2
 
-        results = list()
-        flag = True
-        while flag:
+            results = list()
+            flag = True
+            while flag:
 
-            converted_string = "{},{},{}km".format(self.center[0],
-                                                   self.center[1], self.radius)
-            try:
-                for tweet in Cursor(tw_api.search,
-                                rpp=100,
-                                geocode=converted_string,
-                                show_user=False,
-                                result_type="recent",
-                                include_entities=True,
-                                # lang="en"
-                                ).items(10000):  # Count
+                converted_string = "{},{},{}km".format(self.center[0],
+                                                       self.center[1], self.radius)
+                try:
+                    for tweet in Cursor(tw_api.search,
+                                        rpp=5,
+                                        geocode=converted_string,
+                                        show_user=False,
+                                        result_type="recent",
+                                        include_entities=True,
+                                        # lang="en"
+                                        ).items(20):  # Count
 
-                    days_delta = (datetime.datetime.now() - tweet.created_at).days
+                        days_delta = (datetime.datetime.now() - tweet.created_at).days
 
-                    if days_delta < days_count:
-                        if tweet.coordinates:
+                        if days_delta < days_count:
+                            if tweet.coordinates:
 
-                            tweet_structure = {
-                                'text': tweet.text,
-                                'coordinates': tweet.coordinates,
-                                'likes': tweet.favorite_count + 1,
-                                'retweets': tweet.retweet_count + 1,
-                                'created_at': tweet.created_at
-                            }
-                            results.append(tweet_structure)
-                    else:
-                        flag = False
-                        break
-            except BaseException as e:
-                time.sleep(60)
+                                tweet_structure = {
+                                    'text': tweet.text,
+                                    'coordinates': tweet.coordinates,
+                                    'likes': tweet.favorite_count + 1,
+                                    'retweets': tweet.retweet_count + 1,
+                                    'created_at': tweet.created_at
+                                }
+                                results.append(tweet_structure)
+                        else:
+                            flag = False
+                            break
+                except BaseException as e:
+                    asyncio.sleep(60)
+        else:
+            with open('data.json', 'r') as data_file:
+                results = json.load(data_file)
 
         return results, self.radius
 

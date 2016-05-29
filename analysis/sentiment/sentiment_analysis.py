@@ -10,6 +10,9 @@ from analysis.sentiment.tokenize import preprocess
 from collecting_data.collecting_tweets import TwitterCollector
 
 
+from config.mode import CACHED_MODE
+
+
 class MediaClassifier:
 
     def __init__(self, data, request_type):
@@ -38,7 +41,7 @@ class MediaClassifier:
 
     def get_terms(self, last_days=False):
 
-        collector = TwitterCollector(self.center, self.radius)
+        collector = TwitterCollector(self.center, self.radius, CACHED_MODE)
         self.tweets, radius = collector.search_last_days() \
             if last_days else collector.search()
 
