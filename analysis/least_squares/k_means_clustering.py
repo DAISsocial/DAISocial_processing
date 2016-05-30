@@ -36,6 +36,7 @@ def find_centers(X, K):
     # Initialize to K random centers
     old_mu = random.sample(list(X), K)
     mu = random.sample(list(X), K)
+    clusters = {}
     while not has_converged(mu, old_mu):
         old_mu = mu
         # Assign all points in X to clusters

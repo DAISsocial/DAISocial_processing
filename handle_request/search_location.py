@@ -1,7 +1,7 @@
 import numpy as np
 import datetime
 from analysis.least_squares.k_means_clustering import find_centers
-from analysis.least_squares.calculate_increase import calulate_increase
+from analysis.least_squares.calculate_increase import calculate_increase
 from geopy.distance import vincenty
 
 
@@ -23,7 +23,8 @@ class Searcher:
                        for index, value in enumerate(tweets_with_so)
                        }
 
-        X = np.array([(key, tweet.get('coordinates')[0], tweet.get('coordinates')[0])
+        X = np.array([(key, tweet['coordinates']['coordinates'][0],
+                       tweet['coordinates']['coordinates'][1])
                       for key, tweet in tweet_links.items()])
 
         self.centers, self.clusters = find_centers(X, 20)  # Fixed number of elements
@@ -80,8 +81,8 @@ class Searcher:
         best_cluster, max_a = None, np.iinfo(np.int16).min
 
         for cluster in self.cl_by_months:
-            a1 = calulate_increase(np.array([value[1] for key, value in cluster.items()
-                                            if key in ['30', '60', '90', '120']]))
+            a1 = calculate_increase(np.array([value[1] for key, value in cluster.items()
+                                              if key in ['30', '60', '90', '120']]))
             best_cluster = cluster, max_a = a1 if a1 > max_a else None
 
         return best_cluster

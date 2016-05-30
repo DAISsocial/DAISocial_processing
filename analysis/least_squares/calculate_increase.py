@@ -20,6 +20,6 @@ def calculate_increase(y_data):
 
 if __name__ == '__main__':
     x_data = np.array([0.0, 1.0, 2.0, 3.0])
-    y_data = np.array([0.1, 0.9, 2.2, 2.8])
+    y_data = np.array([0.9, 0.4, 0.3, 0.1])
     a, cov_matrix = curve_fit(linear_func, x_data, y_data)
     print(a)

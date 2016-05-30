@@ -102,14 +102,14 @@ class MediaClassifier:
             # 'triumph', 'triumphal', 'triumphant', 'victory', etc.
         ]
         # adding specific vocab from request
-        self.positive_vocab = positive_vocab.extend(self.request_type.get('positive_verbs'))
+        self.positive_vocab = positive_vocab + self.request_type.get('positive_verbs')
 
         negative_vocab = [
             'bad', 'terrible', 'crap', 'useless', 'hate', ':(', ':-(',
             # 'defeat', etc.
         ]
         # adding specific vocab from request
-        self.negative_vocab = negative_vocab.extend(self.request_type.get('negative_verbs'))
+        self.negative_vocab = negative_vocab + self.request_type.get('negative_verbs')
 
     def calculate_semantic_orientation(self, last_days=False):
 
@@ -123,8 +123,10 @@ class MediaClassifier:
                 self.pmi[t1][t2] = math.log2(self.p_t_com[t1][t2] / denom)
 
         for term, n in self.p_t.items():
-            positive_assoc = sum(self.pmi[term][tx] for tx in self.positive_vocab)
-            negative_assoc = sum(self.pmi[term][tx] for tx in self.negative_vocab)
+            positive_assoc = sum(self.pmi[term][tx] for tx in self.positive_vocab
+                                 if self.pmi[term][tx])
+            negative_assoc = sum(self.pmi[term][tx] for tx in self.negative_vocab
+                                 if self.pmi[term][tx])
             self.semantic_orientation[term] = positive_assoc - negative_assoc
 
         semantic_sorted = sorted(self.semantic_orientation.items(),

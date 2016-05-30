@@ -20,21 +20,25 @@ class TwitterCollector:
             self.radius = 2
 
         results = list()
-        # while len(results) < 9000 and self.radius < 6:
-
+        results_ids = set()
         converted_string = "{},{},{}km".format(self.center[0],
                                                self.center[1], self.radius)
+        # while len(results) < 9000 and self.radius < 6:
 
-        for tweet in Cursor(tw_api.search,
-                            rpp=100,
-                            geocode=converted_string,
-                            show_user=False,
-                            result_type="recent",
-                            include_entities=True,
-                            lang="en").items(10000):  # Counts
-            results.append(tweet)
-
-        self.radius += 1
+        try:
+            for tweet in Cursor(tw_api.search,
+                                rpp=100,
+                                geocode=converted_string,
+                                show_user=False,
+                                result_type="recent",
+                                include_entities=True,
+                                lang="en").items(1000):  # Counts
+                if tweet.id not in results_ids:
+                    results.append(tweet)
+                    results_ids.add(tweet.id)
+            self.radius += 1
+        except BaseException as e:
+            time.sleep(20)
 
         return results, self.radius
 
@@ -52,13 +56,13 @@ class TwitterCollector:
                                                        self.center[1], self.radius)
                 try:
                     for tweet in Cursor(tw_api.search,
-                                        rpp=5,
+                                        rpp=100,
                                         geocode=converted_string,
                                         show_user=False,
                                         result_type="recent",
                                         include_entities=True,
                                         # lang="en"
-                                        ).items(20):  # Count
+                                        ).items(10000):  # Count
 
                         days_delta = (datetime.datetime.now() - tweet.created_at).days
 
