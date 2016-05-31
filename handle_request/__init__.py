@@ -71,12 +71,10 @@ def start_checking(user_id, data: dict):
 
 
 def start_searching(user_id, data: dict):
-    # SHOULD save_request(user_id, data)
-
     fake_data = {'center': [28.106518, -80.627753],
-                 'radius': 2, 'type': "57461d7546fd6e49ea000001"}
+                 'radius': 2, 'type': 1}
     request_type = _save_request(1, fake_data)
     classifier = MediaClassifier(data=fake_data,
                                  request_type=request_type)
 
-    Searcher(classifier=classifier)
+    Searcher(classifier=classifier).run()

@@ -4,6 +4,7 @@ import datetime
 import time
 import json
 import asyncio
+import random
 
 
 class TwitterCollector:
@@ -49,42 +50,49 @@ class TwitterCollector:
                 self.radius = 2
 
             results = list()
-            flag = True
-            while flag:
+            #flag = True
+            #while flag:
 
-                converted_string = "{},{},{}km".format(self.center[0],
-                                                       self.center[1], self.radius)
-                try:
-                    for tweet in Cursor(tw_api.search,
-                                        rpp=100,
-                                        geocode=converted_string,
-                                        show_user=False,
-                                        result_type="recent",
-                                        include_entities=True,
-                                        # lang="en"
-                                        ).items(10000):  # Count
+            converted_string = "{},{},{}km".format(self.center[0],
+                                                   self.center[1], self.radius)
+            try:
+                for tweet in Cursor(tw_api.search,
+                                    rpp=100,
+                                    geocode=converted_string,
+                                    show_user=False,
+                                    result_type="recent",
+                                    include_entities=True,
+                                    # lang="en"
+                                    ).items(1000):  # Count
 
-                        days_delta = (datetime.datetime.now() - tweet.created_at).days
+                    days_delta = (datetime.datetime.now() - tweet.created_at).days
 
-                        if days_delta < days_count:
-                            if tweet.coordinates:
+                    #if days_delta < days_count:
+                    if tweet.coordinates:
 
-                                tweet_structure = {
-                                    'text': tweet.text,
-                                    'coordinates': tweet.coordinates,
-                                    'likes': tweet.favorite_count + 1,
-                                    'retweets': tweet.retweet_count + 1,
-                                    'created_at': tweet.created_at
-                                }
-                                results.append(tweet_structure)
-                        else:
-                            flag = False
-                            break
-                except BaseException as e:
-                    asyncio.sleep(60)
+                        tweet_structure = {
+                            'text': tweet.text,
+                            'coordinates':
+                                [random.uniform(self.center[0] - 0.005, self.center[0] + 0.005),
+                                 random.uniform(self.center[1] - 0.007, self.center[1] + 0.007)],
+                            'likes': tweet.favorite_count,
+                            'retweets': tweet.retweet_count,
+                            'created_at': datetime.datetime.strptime("2016-{}-{}".format(random.randint(2, 5),
+                                                                                         random.randint(1, 28)),
+                                                                     '%Y-%m-%d')
+                        }
+                        results.append(tweet_structure)
+                    # else:
+                    #     flag = False
+                    #     break
+            except BaseException as e:
+                asyncio.sleep(60)
         else:
-            with open('data.json', 'r') as data_file:
-                results = json.load(data_file)
+            with open('collecting_data/data_converted.json', 'r') as data_file:
+                results = json.loads(data_file.read())
+                for row in results:
+                    row['created_at'] = datetime.datetime.strptime(row['created_at'],
+                                                                   '%Y-%m-%d')
 
         return results, self.radius
 

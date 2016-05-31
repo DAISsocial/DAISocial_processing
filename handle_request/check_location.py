@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import datetime
 from reports.check_location_report import CheckReport
+from matplotlib.dates import DayLocator, HourLocator, DateFormatter
+from numpy import arange
 
 
 class Checker:
@@ -22,9 +24,21 @@ class Checker:
 
         x = np.array([date2num(datetime.datetime.strptime(key, '%Y-%m-%d').date())
                       for key in tweets_by_date.keys()])
+        x.sort()
         y = np.array([value for value in tweets_by_date.values()])
-        plt.plot(x, y, '-')
-        plt.gcf().autofmt_xdate()
+
+        fig, ax = plt.subplots()
+        ax.plot_date(x, y, '-')
+
+        ax.set_xlim(x[0], x[-1])
+
+        ax.xaxis.set_major_locator(DayLocator())
+        ax.xaxis.set_minor_locator(HourLocator(arange(0, 25, 6)))
+        ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
+
+        ax.fmt_xdata = DateFormatter('%Y-%m-%d %H:%M:%S')
+        fig.autofmt_xdate()
+
         return plt.savefig('plots/plot.png')
 
     def competitor_media(self):

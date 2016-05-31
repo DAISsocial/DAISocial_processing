@@ -23,7 +23,8 @@ class ProcessingServer:
             logging.debug(data)
             start_searching(user_id, data)
 
-        return web.Response(text="Hi, {}".format(user_id))
+        return web.Response(text="Well done, {},now you can check your results"
+                            .format(user_id))
 
     @asyncio.coroutine
     def check_handler(self, request):
@@ -34,7 +35,8 @@ class ProcessingServer:
             logging.debug(data)
             start_checking(user_id, data)
 
-        return web.Response(text="Hi, {}".format(user_id))
+        return web.Response(text="Well done, {},now you can check your results"
+                            .format(user_id))
 
 if __name__ == '__main__':
     my_server = ProcessingServer()

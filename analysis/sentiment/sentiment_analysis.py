@@ -41,7 +41,7 @@ class MediaClassifier:
 
     def get_terms(self, last_days=False):
 
-        collector = TwitterCollector(self.center, self.radius, CACHED_MODE)
+        collector = TwitterCollector(self.center, self.radius, cached=CACHED_MODE)
         self.tweets, radius = collector.search_last_days() \
             if last_days else collector.search()
 

@@ -12,6 +12,6 @@ class ReportGenerator:
     def save(self, filename):
         fs = gridfs.GridFS(db)
 
-        file_id = fs.put(open('docs/{}'.format(filename)), filename="File.docx")
+        file_id = fs.put(open('docs/{}'.format(filename)).read().decode('utf8'), filename="demo.docx")
         db.users.update_one({'_id': self.user_id},
                             {'$push': {'reports_ids': file_id}})
