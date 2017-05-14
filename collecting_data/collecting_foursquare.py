@@ -1,4 +1,4 @@
-from config.foursquare import client
+from config import GLOBAL_CONFIG
 
 
 class FoursquareCollector:
@@ -9,5 +9,5 @@ class FoursquareCollector:
         self.count = count
 
     def use(self):
-        _client = client
+        _client = GLOBAL_CONFIG.foursquare_client
 

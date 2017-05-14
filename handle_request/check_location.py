@@ -1,11 +1,13 @@
-from analysis.sentiment.sentiment_analysis import MediaClassifier
-from matplotlib.dates import date2num
+import datetime
+
 import matplotlib.pyplot as plt
 import numpy as np
-import datetime
-from reports.check_location_report import CheckReport
 from matplotlib.dates import DayLocator, HourLocator, DateFormatter
+from matplotlib.dates import date2num
 from numpy import arange
+
+from analysis.sentiment.sentiment_analysis import MediaClassifier
+from reports.check_location_report import CheckReport
 
 
 class Checker:
@@ -22,8 +24,10 @@ class Checker:
             else:
                 tweets_by_date[str(tweet.created_at.date())] += 1
 
-        x = np.array([date2num(datetime.datetime.strptime(key, '%Y-%m-%d').date())
-                      for key in tweets_by_date.keys()])
+        x = np.array(
+            [date2num(datetime.datetime.strptime(key, '%Y-%m-%d').date())
+             for key in tweets_by_date.keys()]
+        )
         x.sort()
         y = np.array([value for value in tweets_by_date.values()])
 
@@ -42,13 +46,17 @@ class Checker:
         return plt.savefig('plots/plot.png')
 
     def competitor_media(self):
-        return {term: self.classifier.semantic_orientation[term]
-                for term in self.classifier.request_type.get('keywords')
-                if term in self.classifier.semantic_orientation}
+        return {
+            term: self.classifier.semantic_orientation[term]
+            for term in self.classifier.request_type.get('keywords')
+            if term in self.classifier.semantic_orientation
+        }
 
     def last_media(self):
-        return {'most_common': self.classifier.count_all.most_common(5),
-                'terms_max': self.classifier.terms_max[:5]}
+        return {
+            'most_common': self.classifier.count_all.most_common(5),
+            'terms_max': self.classifier.terms_max[:5]
+        }
 
     def run(self):
         graphic = self.all_media()

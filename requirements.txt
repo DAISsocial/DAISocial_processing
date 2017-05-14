@@ -1,10 +1,18 @@
+# config libs
+configparser
+# http libs
 aiohttp
 urllib3
+# db libs
 pymongo
+# social networks libs
 tweepy
 foursquare
-python-docx
+# scientific libs
 nltk
 numpy
-geopy
 matplotlib
+scipy
+# others
+geopy
+python-docx

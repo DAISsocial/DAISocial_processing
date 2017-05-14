@@ -1,10 +1,12 @@
-from tweepy import Cursor
-from config.twitter import tw_api
-import datetime
-import time
-import json
 import asyncio
+import datetime
+import json
 import random
+import time
+
+from tweepy import Cursor
+
+from config import GLOBAL_CONFIG
 
 
 class TwitterCollector:
@@ -22,18 +24,21 @@ class TwitterCollector:
 
         results = list()
         results_ids = set()
-        converted_string = "{},{},{}km".format(self.center[0],
-                                               self.center[1], self.radius)
-        # while len(results) < 9000 and self.radius < 6:
+        converted_string = "{},{},{}km".format(
+            self.center[0], self.center[1], self.radius)
 
+        # while len(results) < 9000 and self.radius < 6:
+        twitter_client = GLOBAL_CONFIG.twitter_client
         try:
-            for tweet in Cursor(tw_api.search,
-                                rpp=100,
-                                geocode=converted_string,
-                                show_user=False,
-                                result_type="recent",
-                                include_entities=True,
-                                lang="en").items(1000):  # Counts
+            for tweet in Cursor(
+                twitter_client.search,
+                rpp=100,
+                geocode=converted_string,
+                show_user=False,
+                result_type="recent",
+                include_entities=True,
+                lang="en"
+            ).items(1000):  # Counts
                 if tweet.id not in results_ids:
                     results.append(tweet)
                     results_ids.add(tweet.id)
@@ -55,16 +60,17 @@ class TwitterCollector:
 
             converted_string = "{},{},{}km".format(self.center[0],
                                                    self.center[1], self.radius)
+            twitter_client = GLOBAL_CONFIG.twitter_client
             try:
-                for tweet in Cursor(tw_api.search,
-                                    rpp=100,
-                                    geocode=converted_string,
-                                    show_user=False,
-                                    result_type="recent",
-                                    include_entities=True,
-                                    # lang="en"
-                                    ).items(1000):  # Count
-
+                for tweet in Cursor(
+                    twitter_client.search,
+                    rpp=100,
+                    geocode=converted_string,
+                    show_user=False,
+                    result_type="recent",
+                    include_entities=True,
+                    # lang="en"
+                ).items(1000):  # Count
                     days_delta = (datetime.datetime.now() - tweet.created_at).days
 
                     #if days_delta < days_count:

@@ -1,11 +1,11 @@
-import json
-from tweepy import Cursor
-from config.twitter import tw_api
 import datetime
-import time
 import json
-import asyncio
 import random
+import time
+
+from tweepy import Cursor
+
+from config import GLOBAL_CONFIG
 
 
 def collect_tweets_to_file():
@@ -15,17 +15,19 @@ def collect_tweets_to_file():
     results_ids = set()
     flag = True
     while flag:
-        converted_string = "{},{},{}km".format(center[0],
-                                               center[1], radius)
+        converted_string = "{},{},{}km".format(
+            center[0], center[1], radius)
+        twitter_client = GLOBAL_CONFIG.twitter_client
         try:
-            for tweet in Cursor(tw_api.search,
-                                rpp=100,
-                                geocode=converted_string,
-                                show_user=False,
-                                result_type="recent",
-                                include_entities=True,
-                                # lang="en"
-                                ).items(1000):  # Count
+            for tweet in Cursor(
+                twitter_client.search,
+                rpp=100,
+                geocode=converted_string,
+                show_user=False,
+                result_type="recent",
+                include_entities=True,
+                # lang="en"
+            ).items(1000):  # Count
                 days_delta = (datetime.datetime.now() - tweet.created_at).days
 
                 if days_delta < days_count:

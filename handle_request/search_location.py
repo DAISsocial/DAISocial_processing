@@ -1,9 +1,10 @@
-import numpy as np
 import datetime
+
+import numpy as np
 from analysis.least_squares.k_means_clustering import find_centers
-from analysis.least_squares.calculate_increase import calculate_increase
 from geopy.distance import vincenty
-from config.mode import CACHED_MODE
+
+from analysis.calculate_increase import calculate_increase
 from reports.search_location_report import SearchReport
 
 
@@ -19,12 +20,15 @@ class Searcher:
     def founding_best_cluster(self):
         tweets_with_so = self.classifier.calculate_summary_so()
 
-        tweet_links = {index: value
-                       for index, value in enumerate(tweets_with_so)
-                       }
-        X = np.array([(key, tweet['coordinates'][0],
-                       tweet['coordinates'][1])
-                      for key, tweet in tweet_links.items()])
+        tweet_links = {
+            index: value
+            for index, value in enumerate(tweets_with_so)
+        }
+
+        X = np.array(
+            [(key, tweet['coordinates'][0], tweet['coordinates'][1])
+             for key, tweet in tweet_links.items()]
+        )
 
         self.centers, self.clusters = find_centers(X, 20)  # Fixed number of elements
         self.cl_by_months = self.count_cluster_so_by_months(tweet_links)
@@ -81,10 +85,12 @@ class Searcher:
         best_cluster, max_a = None, np.iinfo(np.int16).min
 
         for cluster in self.cl_by_months:
-            a1 = calculate_increase(np.array([cluster['30'][1],
-                                              cluster['60'][1],
-                                              cluster['90'][1],
-                                              cluster['120'][1]]))
+            a1 = calculate_increase(
+                np.array([cluster['30'][1],
+                          cluster['60'][1],
+                          cluster['90'][1],
+                          cluster['120'][1]])
+            )
             if a1 > max_a:
                 best_cluster, max_a = cluster, a1
 

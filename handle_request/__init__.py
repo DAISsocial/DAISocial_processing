@@ -1,15 +1,19 @@
-from config.database import db
 from analysis.sentiment.sentiment_analysis import MediaClassifier
+from config import GLOBAL_CONFIG
 from .check_location import Checker
 from .search_location import Searcher
 
 
 def save_request(user_id: int, data: dict):
+    db = GLOBAL_CONFIG.db
     center = data.get('center')
     request_type = db.request_types.find_one()  # {'_id': data.get('type')})
-    db.check_request.insert_one({'user_id': user_id,
-                                 'location': {'type': 'Point', 'coordinates': center},
-                                 'request_types': request_type})
+    db.check_request.insert_one(
+        {'user_id': user_id,
+         'location': {'type': 'Point', 'coordinates': center},
+         'request_types': request_type}
+    )
+
     return request_type
 
 

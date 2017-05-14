@@ -1,5 +1,9 @@
+# idea files
 .idea/
-config/
+
+# configs
+config.ini
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -35,3 +39,7 @@ coverage.xml
 
 # Translations
 *.mo
+
+# MacOS files
+.DS_Store
+

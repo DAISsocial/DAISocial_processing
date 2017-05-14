@@ -1,5 +1,4 @@
 from .report_generator import ReportGenerator
-from docx.shared import Inches
 
 
 class SearchReport(ReportGenerator):
