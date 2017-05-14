@@ -6,7 +6,7 @@ from matplotlib.dates import DayLocator, HourLocator, DateFormatter
 from matplotlib.dates import date2num
 from numpy import arange
 
-from analysis.sentiment.sentiment_analysis import MediaClassifier
+from ..analysis.sentiment.sentiment_analysis import MediaClassifier
 from reports.check_location_report import CheckReport
 
 

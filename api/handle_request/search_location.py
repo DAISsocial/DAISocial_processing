@@ -1,10 +1,10 @@
 import datetime
 
 import numpy as np
-from analysis.least_squares.k_means_clustering import find_centers
+from ..analysis.k_means_clustering import find_centers
 from geopy.distance import vincenty
 
-from analysis.calculate_increase import calculate_increase
+from api.analysis.calculate_increase import calculate_increase
 from reports.search_location_report import SearchReport
 
 

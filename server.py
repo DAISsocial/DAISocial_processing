@@ -1,9 +1,11 @@
 import asyncio
+import logging
+
 from aiohttp import web
-from handle_request import (
+
+from api.handle_request import (
     start_checking, start_searching
 )
-import logging
 
 
 class ProcessingServer:
@@ -12,7 +14,6 @@ class ProcessingServer:
         self.app = web.Application()
         self.app.router.add_route('POST', '/users/{id}/search_request', self.search_handler)
         self.app.router.add_route('POST', '/users/{id}/check_request', self.check_handler)
-        web.run_app(self.app)
 
     @asyncio.coroutine
     def search_handler(self, request):
@@ -38,5 +39,8 @@ class ProcessingServer:
         return web.Response(text="Well done, {},now you can check your results"
                             .format(user_id))
 
+    def run(self):
+        web.run_app(self.app)
+
 if __name__ == '__main__':
-    my_server = ProcessingServer()
+    ProcessingServer().run()

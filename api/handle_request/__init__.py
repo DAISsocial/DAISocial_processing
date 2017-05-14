@@ -1,4 +1,4 @@
-from analysis.sentiment.sentiment_analysis import MediaClassifier
+from api.analysis.sentiment.sentiment_analysis import MediaClassifier
 from config import GLOBAL_CONFIG
 from .check_location import Checker
 from .search_location import Searcher

@@ -6,10 +6,8 @@ from collections import defaultdict
 
 from nltk.corpus import stopwords
 
-from analysis.sentiment.tokenize import preprocess
-from collecting_data.collecting_tweets import TwitterCollector
-
-
+from .tokenize import preprocess
+from api.collecting_data.collecting_tweets import TwitterCollector
 from config import GLOBAL_CONFIG
 
 
