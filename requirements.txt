@@ -17,3 +17,4 @@ scipy
 geopy
 python-docx
 manage.py
+bson

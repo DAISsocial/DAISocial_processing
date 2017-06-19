@@ -3,8 +3,8 @@ from .report_generator import ReportGenerator
 
 class SearchReport(ReportGenerator):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, user_id):
+        super().__init__(user_id)
 
     def create(self, best_cluster):
         self.document.add_heading('Reporting Document', 0)

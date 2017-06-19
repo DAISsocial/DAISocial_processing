@@ -1,0 +1,1 @@
+COUNT_TWEETS = 80

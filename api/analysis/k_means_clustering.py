@@ -58,9 +58,3 @@ if __name__ == '__main__':
 
     mu, cl = find_centers(X, 20)
     print(mu, cl)
-
-
-
-
-
-

@@ -1,4 +1,5 @@
 import gridfs
+from bson.objectid import ObjectId
 from docx import Document
 
 from config import GLOBAL_CONFIG
@@ -6,8 +7,8 @@ from config import GLOBAL_CONFIG
 
 class ReportGenerator:
 
-    def __init__(self):
-        self.user_id = None
+    def __init__(self, user_id):
+        self.user_id = user_id
         self.document = Document()
 
     def save(self, filename):
@@ -15,10 +16,10 @@ class ReportGenerator:
         fs = gridfs.GridFS(db)
 
         file_id = fs.put(
-            open('docs/{}'.format(filename)).read().decode('utf8'),
-            filename="demo.docx"
+            open(r'docs/{}'.format(filename), 'rb'),
+            filename="demo.docx"  # TODO: RANDOM NAME
         )
         db.users.update_one(
-            {'_id': self.user_id},
+            {'_id': ObjectId(self.user_id)},
             {'$push': {'reports_ids': file_id}}
         )

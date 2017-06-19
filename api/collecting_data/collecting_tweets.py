@@ -7,6 +7,7 @@ import time
 from tweepy import Cursor
 
 from config import GLOBAL_CONFIG
+from config.count import COUNT_TWEETS
 
 
 class TwitterCollector:
@@ -38,7 +39,7 @@ class TwitterCollector:
                 result_type="recent",
                 include_entities=True,
                 lang="en"
-            ).items(1000):  # Counts
+            ).items(COUNT_TWEETS):  # Counts
                 if tweet.id not in results_ids:
                     results.append(tweet)
                     results_ids.add(tweet.id)
@@ -69,8 +70,8 @@ class TwitterCollector:
                     show_user=False,
                     result_type="recent",
                     include_entities=True,
-                    # lang="en"
-                ).items(1000):  # Count
+                    lang="en"
+                ).items(COUNT_TWEETS):  # Count
                     days_delta = (datetime.datetime.now() - tweet.created_at).days
 
                     #if days_delta < days_count:
@@ -83,7 +84,7 @@ class TwitterCollector:
                                  random.uniform(self.center[1] - 0.007, self.center[1] + 0.007)],
                             'likes': tweet.favorite_count,
                             'retweets': tweet.retweet_count,
-                            'created_at': datetime.datetime.strptime("2016-{}-{}".format(random.randint(2, 5),
+                            'created_at': datetime.datetime.strptime("2017-{}-{}".format(random.randint(2, 5),
                                                                                          random.randint(1, 28)),
                                                                      '%Y-%m-%d')
                         }
@@ -94,7 +95,7 @@ class TwitterCollector:
             except BaseException as e:
                 asyncio.sleep(60)
         else:
-            with open('collecting_data/data_converted.json', 'r') as data_file:
+            with open('./api/collecting_data/data.json', 'r') as data_file:
                 results = json.loads(data_file.read())
                 for row in results:
                     row['created_at'] = datetime.datetime.strptime(row['created_at'],

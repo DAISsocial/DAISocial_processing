@@ -4,8 +4,8 @@ from docx.shared import Inches
 
 class CheckReport(ReportGenerator):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, user_id):
+        super().__init__(user_id)
 
     def create(self, graphic, last_common_media: dict, competitor_media):
         self.document.add_heading('Reporting Document', 0)
